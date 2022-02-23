@@ -4,6 +4,16 @@
 # https://github.com/greenelab/simulate-groups, which generates datasets with
 # some shared covariance structure.
 
+# Params chosen:
+# uncorr_frac=0.2 represents features (genes) that are not expressed and/or
+#   irrelevant in a given biological context, here simulated to be 20% of features
+# num_groups=10, number of interconnected gene "networks", arbitrarily set to 10
+# group_sparsity=0.6 or 0.4, only some of the gene networks will affect the output
+#   feature y, other gene networks have effect sizes set to 0. The decreased value
+#   in the target dataset represents that two different datasets will have some
+#   shared structure and some that isn't preserved between the two. Wenda will
+#   ideally upweight genes with shared covariance structure between the datasets.
+
 import os
 import random
 import numpy as np
