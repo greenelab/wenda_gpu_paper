@@ -1,8 +1,9 @@
 #!/bin/bash
 
+# This script takes input from the command line. Example command: bash time_wenda_gpu.sh handl 100
+
 prefix=$1 #This should be changed to a specific, meaningful identifier for the dataset and classification problem.
 batch_size=$2 #How many feature models to train in one batch. For small datasets (i.e. few number of samples), this number can be raised without risk of memory flow errors, but very large datasets may require a number <100.
-logistic=1 #This value should be 1 for logistic net regression (binary label data) and 0 for elastic net regression (continuous label data).
 
 filename=runtimes/${prefix}_wenda_gpu.txt
 
