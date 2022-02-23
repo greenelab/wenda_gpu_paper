@@ -297,11 +297,6 @@ class Wenda:
             model.fit(data_x, data_y)
             model.savetxt(os.path.join(self._feature_model_dir, self._feature_model_format.format(i)))
             print(".", end="", flush=True)
-            test_x = self._x_test[:, ~is_i]
-            pred_y = model.predict(test_x)
-            np.savetxt(os.path.join(self._feature_model_dir, "wenda_%s_predictions.tsv" % i), pred_y)
-            pred_y_var = model.predict_var(test_x)
-            np.savetxt(os.path.join(self._feature_model_dir, "wenda_%s_variances.tsv" % i), pred_y_var)
 
     def collectConfidences(self):
         # skip if confidences have been loaded before
