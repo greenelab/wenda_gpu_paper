@@ -1,6 +1,7 @@
 import gpytorch
 import math
 import torch
+import numpy as np
 #import pyro
 #import pyro.distributions as dist
 #from pyro.nn import PyroModule, PyroSample
@@ -129,6 +130,10 @@ def train_model_bfgs(model, likelihood, x, y, learning_rate,
     return model, likelihood
 
 
+def confidence_to_weights(x, k):
+    return np.power(1-x, k)
+
+
 def getConfidence(model, likelihood, x, y):
     with gpytorch.settings.fast_pred_var():
         f_preds = likelihood(model(x))
@@ -143,3 +148,14 @@ def getConfidence(model, likelihood, x, y):
     return mu, sigma_sq ** 2, confidences
 
 
+def age_transform(age, adult_age=20):
+    age = (age+1)/(1+adult_age)
+    y = np.where(age <= 1, np.log(age), age-1)
+    return(y)
+
+
+def age_back_transform(trans_age, adult_age=20):
+    y = np.where(trans_age < 0,
+                 (1+adult_age)*np.exp(trans_age)-1,
+                 (1+adult_age)*trans_age+adult_age)
+    return(y)
