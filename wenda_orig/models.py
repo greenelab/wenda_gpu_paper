@@ -1,9 +1,9 @@
-# This code is from https://github.com/PfeiferLabTue/wenda, adapted from
-# data.py. Changes were made to avoid AttributeErrors for shuffle param,
-# which was always set to true for our analyses, and passing weights
-# directly into model.fit() to avoid a second AttributeError. Also code
-# that wasn't used for our analysis (class ElasticNetLm) was removed for
-# readability. Originally written by Lisa (Handl) Eisenberg
+# This code is from https://github.com/PfeiferLabTue/wenda, adapted from data.py.
+# Changes were made to avoid AttributeErrors for shuffle param, which was always
+# set to true for our analyses, and passing weights directly into model.fit() to
+# avoid a second AttributeError. Also code that wasn't used for our analysis 
+# (class ElasticNetLm and class  BaselineWeightedEN) were removed for readability.
+# Originally written by Lisa (Handl) Eisenberg
 
 import warnings
 import os
