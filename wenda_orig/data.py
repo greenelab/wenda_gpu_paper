@@ -68,8 +68,8 @@ class MethylationDataset:
             self._pheno_path = os.path.normpath(self._pheno_path)
 
         # save methylation matrix and age as needed for model input
-        self.meth_matrix = np.asfortranarray(self.meth_table.to_numpy().T)
-        self.age = np.asfortranarray(self.pheno_table.to_numpy())
+        self.meth_matrix = np.asfortranarray(self.meth_table.to_numpy().T).squeeze()
+        self.age = np.asfortranarray(self.pheno_table.to_numpy()).squeeze()
 
     @classmethod
     def read(cls, meth_path, pheno_path, sep=' ', quotechar='"'):

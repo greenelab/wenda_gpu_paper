@@ -10,8 +10,8 @@ filename=runtimes/${prefix}_wenda_gpu.txt
 start=$SECONDS
 
 # Get number of columns
-source_features=`awk -F"\t" '{print NF;exit}' $data_path/$prefix/source_data.tsv`
-target_features=`awk -F"\t" '{print NF;exit}' $data_path/$prefix/target_data.tsv`
+source_features=`awk -F"\t" '{print NF;exit}' data/$prefix/source_data.tsv`
+target_features=`awk -F"\t" '{print NF;exit}' data/$prefix/target_data.tsv`
 if [ $source_features -ne $target_features ]; then
 	echo "Error: Source and target datasets have different numbers of features."
 	echo "Source dataset has ${source_features} features, target dataset has ${target_features}."
@@ -40,7 +40,7 @@ do
 done
 
 # Confirm all feature models have been trained and confidence scores generated
-conf_files=`ls -1q $confidence_path/${prefix}_wenda_gpu | wc -l`
+conf_files=`ls -1q confidences/${prefix}_wenda_gpu | wc -l`
 
 if [ $conf_files -ne $source_features ]; then
 	echo "Error: not all models trained. Number of models trained: ${conf_files}" > $filename
