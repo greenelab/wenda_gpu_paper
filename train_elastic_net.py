@@ -1,4 +1,5 @@
-# Takes the confidence scores from the feature models and uses them as weighted
+# This script is borrowed directly from https://github.com/greenelab/wenda_gpu.
+# It takes confidence scores from the feature models and uses them as weighted
 # penalties for the ultimate elastic (or logistic) net task, training the
 # source data on the source labels. This script will train several models, a
 # vanilla (unweighted) elastic net and with a variety of penalization amounts
