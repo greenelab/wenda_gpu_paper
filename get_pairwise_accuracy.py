@@ -4,12 +4,26 @@
 # values of k (increasing penalty on genes with low transferability to target
 # distribution), so we're selecting the best value of k for a given pair.
 
+# We're trying out several kinds of performance metrics, which can be specified
+# using args.metric. Current options supported are:
+#   accuracy (TP + TN / total number of samples)
+#   auroc (ROC_AUC, area under curve of TPR vs FPR)
+#   aupr (average precision, TP / TP + FP)
+#   brier (a combination of accuracy and calibration)
+
 import os
 import re
 import argparse
 import numpy as np
 import pandas as pd
 from collections import Counter
+from sklearn.metrics import average_precision_score, roc_auc_score, brier_score_loss 
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-m', '--metric', default="accuracy", help="Metric used to quantify classifier performance.")
+args = parser.parse_args()
+
 
 kwnet_values = [0, 1, 2, 3, 4, 6, 8, 10, 14, 18, 25, 35]
 
@@ -38,12 +52,12 @@ for d in dirs:
     shuffled_or_signal.append(shuffled)
 
     # Pull actual mutation status from data_dir
-    actual = pd.read_csv("data/pairwise/%s/target_y.tsv" % d, sep="\t")
+    actual = pd.read_csv("data/pairwise/%s/target_y.tsv" % d, sep="\t", header=None)
     actual = np.asfortranarray(actual)
 
     # Find highest accuracy across values of k
     elastic_accuracy = 0
-    best_wenda_accuracy = 0
+    best_wenda_accuracy = -1 if args.metric == "brier" else 0
     vanilla_trained = False
     some_wenda_trained = False
 
@@ -55,6 +69,8 @@ for d in dirs:
         output_dir = "output/pairwise/%s_wenda_gpu/k_{0:02d}".format(k) % d
         try:
             predicted = np.loadtxt(os.path.join(output_dir, "target_predictions.txt"))
+            probs = np.loadtxt(os.path.join(output_dir, "target_probabilities.txt"))
+            probs = probs[:, 0]
         except IOError:
             continue
 
@@ -65,9 +81,17 @@ for d in dirs:
             else:
                 some_wenda_trained = True
 
-        # Get accuracy
-        correct = (predicted == actual)
-        accuracy = correct.sum() / correct.size
+        # Get accuracy or related metric
+        if args.metric == "accuracy":
+            correct = (predicted == actual)
+            accuracy = correct.sum() / correct.size
+        elif args.metric == "auroc":
+            accuracy = roc_auc_score(actual, probs)
+        elif args.metric == "aupr":
+            accuracy = average_precision_score(actual, probs)
+        elif args.metric == "brier":
+            accuracy = (brier_score_loss(actual, probs)) * -1
+
         if k == 0:
             elastic_accuracy = accuracy
         elif accuracy > best_wenda_accuracy:
@@ -90,7 +114,14 @@ print(Counter(failures))
 print(Counter(shuffled_or_signal))
 print(performance_comp)
 
+# If using brier score, flip back scores from negative
+if args.metric == "brier":
+    vanilla_performance = [i * -1 for i in vanilla_performance]
+    wenda_performance = [i * -1 for i in wenda_performance]
+    performance_comp = [i * -1 for i in performance_comp]
+
 # Save to file
 data = {'Source': sources, 'Target': targets, 'Failed': failures, 'Shuffled': shuffled_or_signal, 'Elastic': vanilla_performance, 'Wenda': wenda_performance, 'Comparative': performance_comp}
 df = pd.DataFrame(data)
-df.to_csv("output/pairwise/pairwise_results.tsv", index=False, sep="\t")
+filename = "output/pairwise/pairwise_%s.tsv" % args.metric
+df.to_csv(filename, index=False, sep="\t")
