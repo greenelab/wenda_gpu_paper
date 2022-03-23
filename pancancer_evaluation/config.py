@@ -1,3 +1,5 @@
+# Originally written by Jake Crawford
+
 import pathlib
 
 repo_root = pathlib.Path(__file__).resolve().parent.parent

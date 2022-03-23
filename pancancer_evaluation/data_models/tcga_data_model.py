@@ -1,3 +1,6 @@
+# Originally written by Jake Crawford, with the only change being
+# writing files to the locations needed for running wenda_gpu.
+
 import os
 import sys
 import typing

@@ -1,7 +1,6 @@
-"""
-Functions for reading and processing input data
+# Functions for reading and processing input data.
+# Originally written by Jake Crawford.
 
-"""
 import os
 import sys
 from pathlib import Path
