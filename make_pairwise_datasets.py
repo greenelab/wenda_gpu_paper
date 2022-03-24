@@ -5,7 +5,7 @@
 # code are removed. It's also designed to work for many genes and many cancer types,
 # but since we're using this as a proof of principle we stuck to TP53 and hand-
 # selected cancer types that had non-trivial numbers of both TP53 mutant and WT
-# and hardcoded them in.
+# and hardcoded them in. Originally written by Jake Crawford.
 
 import sys
 import argparse
@@ -94,12 +94,12 @@ if __name__ == '__main__':
                 try:
                     test_classification = du.get_classification(
                         test_identifier.split('_')[0])
-                    tcga_data.process_data_for_identifiers(train_identifier,
-                                                           test_identifier,
-                                                           train_classification,
-                                                           test_classification,
-                                                           output_dir,
-                                                           shuffle_labels)
+                    tcga_data.write_datasets_to_file(train_identifier,
+                                                     test_identifier,
+                                                     train_classification,
+                                                     test_classification,
+                                                     output_dir,
+                                                     shuffle_labels)
                 except (KeyError, IndexError) as e:
                     # this might happen if the given gene isn't in the mutation data
                     # (or has a different alias, TODO check for this later)

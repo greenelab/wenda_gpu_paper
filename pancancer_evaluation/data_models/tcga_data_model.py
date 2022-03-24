@@ -129,16 +129,16 @@ class TCGADataModel():
         self.y_df = y_filtered_df
         self.gene_features = gene_features
 
-    def process_data_for_identifiers(self,
-                                     train_identifier,
-                                     test_identifier,
-                                     train_classification,
-                                     test_classification,
-                                     output_dir,
-                                     shuffle_labels=False,
-                                     percent_holdout=None,
-                                     holdout_class='both',
-                                     shuffle_train=False):
+    def write_datasets_to_file(self,
+                               train_identifier,
+                               test_identifier,
+                               train_classification,
+                               test_classification,
+                               output_dir,
+                               shuffle_labels=False,
+                               percent_holdout=None,
+                               holdout_class='both',
+                               shuffle_train=False):
         """
         Prepare to train model on a given gene/cancer type combination, and
         test on another.
