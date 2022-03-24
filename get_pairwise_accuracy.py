@@ -45,7 +45,7 @@ for d in dirs:
     sources.append(name[1])
     targets.append(name[2])
 
-    if re.search("shuffled", d) is not None:
+    if 'shuffled' in os.path.basename(d):
         shuffled = True
     else:
         shuffled = False
