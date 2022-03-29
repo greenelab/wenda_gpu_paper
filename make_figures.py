@@ -33,6 +33,9 @@ else:
 
 # Figure 0
 # Basic barplot of methylation runtimes, only for the AACR poster
+# 183600: original wenda paper said theirs ran in 51 hours, so 51*60*60
+# 246213: total time time_wenda_orig.sh was allowed to run on handl dataset
+# 18566: taken from runtimes/handl_wenda_gpu.txt
 times = pd.DataFrame({
     'Software': ['wenda_orig, 10 cores', 'wenda_orig, 6 cores', 'wenda_gpu'],
     'Time': [183600, 246213, 18566]})
@@ -109,7 +112,7 @@ output_dir = "output/handl_wenda_orig/wnet_cv/"
 orig_predictions = np.zeros((1001, 10))
 correlations = []
 for i in range(10):
-    repeat_dir = os.path.join(output_dir, "repetition_{0:02d}".format(i))
+    repeat_dir = os.path.join(output_dir, "repetition_%0.02d" % i)
     orig_prediction_path = os.path.join(repeat_dir, "predictions_k%d.txt" % args.kval)
     o_pred = np.loadtxt(orig_prediction_path)
     orig_predictions[:, i] = o_pred
@@ -237,7 +240,7 @@ def make_figure_panel(filename, scale_x_input, scale_y_input, x_loc, y_loc):
     print(f"scaled:{(panel_size[0]*scale_x,panel_size[1]*scale_y)}")
 
     panel = panel.getroot()
-    #panel.scale_xy(x=scale_x, y=scale_y) #TODO: this is throwing an AttributeError so I just left it out
+    panel.scale_xy(x=scale_x, y=scale_y) #TODO: this is throwing an AttributeError so I just left it out
     panel.moveto(x_loc, y_loc)
 
     return panel
