@@ -109,7 +109,7 @@ output_dir = "output/handl_wenda_orig/wnet_cv/"
 orig_predictions = np.zeros((1001, 10))
 correlations = []
 for i in range(10):
-    repeat_dir = os.path.join(output_dir, "repetition_{0:02d}".format(i))
+    repeat_dir = os.path.join(output_dir, "repetition_%0.02d" % i)
     orig_prediction_path = os.path.join(repeat_dir, "predictions_k%d.txt" % args.kval)
     o_pred = np.loadtxt(orig_prediction_path)
     orig_predictions[:, i] = o_pred
