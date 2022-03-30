@@ -131,7 +131,7 @@ data = pd.DataFrame(
 gB = ggplot(data, aes('gpu', 'orig')) + geom_point(size=2)
 gB += xlab("wenda_gpu predicted age") + ylab("wenda_orig predicted age")
 gB += theme_bw()
-gB += ggtitle("Methylation Age Predictions")
+gB += ggtitle("Methylation Age Predictions Across Softwares")
 gB.save("figures/software_correlation.%s" % ext, dpi=300)
 
 
@@ -226,22 +226,18 @@ gE.save("figures/pairwise_scatterplot.%s" % ext, dpi=300)
 
 
 # Combine all paper figures into one
-def make_figure_panel(filename, scale_x_input, scale_y_input, x_loc, y_loc):
+def make_figure_panel(filename, scale, x_loc, y_loc):
     panel = sg.fromfile(filename)
     panel_size = (
             np.round(float(panel.root.attrib["width"][:-2]) * 1.33, 0),
             np.round(float(panel.root.attrib["height"][:-2]) * 1.33, 0)
             )
 
-    scale_x = scale_x_input
-    scale_y = scale_y_input
-
     print(f"original: {panel_size}")
-    print(f"scaled:{(panel_size[0]*scale_x,panel_size[1]*scale_y)}")
+    print(f"scaled:{(panel_size[0]*scale,panel_size[1]*scale)}")
 
     panel = panel.getroot()
-    panel.scale_xy(x=scale_x, y=scale_y) #TODO: this is throwing an AttributeError so I just left it out
-    panel.moveto(x_loc, y_loc)
+    panel.moveto(x_loc, y_loc, scale)
 
     return panel
 
@@ -249,43 +245,37 @@ def make_figure_panel(filename, scale_x_input, scale_y_input, x_loc, y_loc):
 if ext == "svg":
     panel_1a = make_figure_panel(
             "figures/runtimes.svg",
-            scale_x_input=0.85,
-            scale_y_input=0.85,
+            scale=0.85,
             x_loc=20,
             y_loc=20)
 
     panel_1b = make_figure_panel(
             "figures/software_correlation.svg",
-            scale_x_input=0.85,
-            scale_y_input=0.85,
+            scale=0.85,
             x_loc=650,
             y_loc=20)
 
     panel_1c = make_figure_panel(
             "figures/vanilla_true_comparison.svg",
-            scale_x_input=0.85,
-            scale_y_input=0.85,
+            scale=0.85,
             x_loc=20,
             y_loc=400)
 
     panel_1cc = make_figure_panel(
             "figures/wenda_true_comparison.svg",
-            scale_x_input=0.85,
-            scale_y_input=0.85,
+            scale=0.85,
             x_loc=650,
             y_loc=400)
 
     panel_1d = make_figure_panel(
             "figures/pairwise_vanilla.svg",
-            scale_x_input=0.85,
-            scale_y_input=0.85,
+            scale=0.85,
             x_loc=20,
             y_loc=800)
 
     panel_1dd = make_figure_panel(
             "figures/pairwise_wenda.svg",
-            scale_x_input=0.85,
-            scale_y_input=0.85,
+            scale=0.85,
             x_loc=650,
             y_loc=800)
 
