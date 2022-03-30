@@ -164,7 +164,7 @@ gC += scale_color_manual(["#377EB8", "#E41A1C", "#A65628",
                           "#F781BF", "#4DAF4A", "#984EA3"])
 gC += theme_bw()
 gC += ggtitle("Methylation Age Prediction with wenda_gpu")
-gC.save("figures/wenda_true_comparison.%s" % ext, dpi=300, width=6, height=4.8)
+gC.save("figures/wenda_true_comparison.%s" % ext, dpi=300)
 
 
 gCC = ggplot(data, aes('true', 'vanilla', color='tissue')) 
@@ -175,7 +175,7 @@ gCC += scale_color_manual(["#377EB8", "#E41A1C", "#A65628",
                            "#F781BF", "#4DAF4A", "#984EA3"])
 gCC += theme_bw()
 gCC += ggtitle("Methylation Age Prediction with Elastic Net")
-gCC.save("figures/vanilla_true_comparison.%s" % ext, dpi=300, width=6, height=4.8)
+gCC.save("figures/vanilla_true_comparison.%s" % ext, dpi=300)
 
 
 # Figure 1D
@@ -196,14 +196,14 @@ pairwise['Vanilla_diff'] = pairwise['Signal_Elastic'] - pairwise['Shuffled_Elast
 gD = ggplot(pairwise, aes(x='Source', y='Target', fill='Wenda_diff')) + geom_tile()
 gD += theme_classic() + theme(axis_text_x=element_text(angle=90))
 gD += scale_fill_gradient2(low="#377EB8", high="#E41A1C", limits=[-0.8, 0.8])
-gD += labs(fill='Accuracy (Signal - Shuffled)', x='Source Data', y='Target Data')
+gD += labs(fill='Accuracy\n(Signal - Shuffled)\n', x='Source Data', y='Target Data')
 gD += ggtitle("TP53 Mutation Prediction with wenda_gpu")
 gD.save("figures/pairwise_wenda.%s" % ext, dpi=300)
 
 gDD = ggplot(pairwise, aes(x='Source', y='Target', fill='Vanilla_diff')) + geom_tile()
 gDD += scale_fill_gradient2(low="#377EB8", high="#E41A1C", limits=[-0.8, 0.8])
 gDD += theme_classic() + theme(axis_text_x=element_text(angle=90))
-gDD += labs(fill='Accuracy (Signal - Shuffled)', x='Source Data', y='Target Data')
+gDD += labs(fill='Accuracy\n(Signal - Shuffled)\n', x='Source Data', y='Target Data')
 gDD += ggtitle("TP53 Mutation Prediction with Elastic Net")
 gDD.save("figures/pairwise_vanilla.%s" % ext, dpi=300)
 
@@ -252,39 +252,39 @@ if ext == "svg":
     panel_1b = make_figure_panel(
             "figures/software_correlation.svg",
             scale=0.85,
-            x_loc=650,
+            x_loc=500,
             y_loc=20)
 
     panel_1c = make_figure_panel(
             "figures/vanilla_true_comparison.svg",
             scale=0.85,
-            x_loc=20,
-            y_loc=400)
+            x_loc=30,
+            y_loc=333)
 
     panel_1cc = make_figure_panel(
             "figures/wenda_true_comparison.svg",
             scale=0.85,
-            x_loc=650,
-            y_loc=400)
+            x_loc=500,
+            y_loc=333)
 
     panel_1d = make_figure_panel(
             "figures/pairwise_vanilla.svg",
             scale=0.85,
             x_loc=20,
-            y_loc=800)
+            y_loc=667)
 
     panel_1dd = make_figure_panel(
             "figures/pairwise_wenda.svg",
             scale=0.85,
-            x_loc=650,
-            y_loc=800)
+            x_loc=500,
+            y_loc=667)
 
     panel_1a_label = sg.TextElement(20, 20, "A", size=16, weight="bold")
-    panel_1b_label = sg.TextElement(650, 20, "B", size=16, weight="bold")
-    panel_1c_label = sg.TextElement(20, 400, "C", size=16, weight="bold")
-    panel_1d_label = sg.TextElement(20, 800, "D", size=16, weight="bold")
+    panel_1b_label = sg.TextElement(500, 20, "B", size=16, weight="bold")
+    panel_1c_label = sg.TextElement(20, 333, "C", size=16, weight="bold")
+    panel_1d_label = sg.TextElement(20, 667, "D", size=16, weight="bold")
 
-    figure_1 = sg.SVGFigure("1300", "1400")
+    figure_1 = sg.SVGFigure("1300", "1333")
     figure_1.append(
             [
                 etree.Element("rect", {"width": "100%", "height": "100%", "fill": "white"}),
