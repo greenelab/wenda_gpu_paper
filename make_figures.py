@@ -131,11 +131,11 @@ data = pd.DataFrame(
 gB = ggplot(data, aes('gpu', 'orig')) + geom_point(size=2)
 gB += xlab("wenda_gpu predicted age") + ylab("wenda_orig predicted age")
 gB += theme_bw()
-gB += ggtitle("Methylation Age Predictions")
+gB += ggtitle("Methylation Age Predictions Across Softwares")
 gB.save("figures/software_correlation.%s" % ext, dpi=300)
 
 
-# Figure 1C
+# Figure 1C-D
 # Comparing age predictions from wenda_gpu and vanilla elastic net
 
 # Load phenotype data with actual age and tissue type
@@ -148,7 +148,7 @@ output_dir = "output/handl_wenda_gpu/k_00"
 vanilla_prediction_path = os.path.join(output_dir, "target_predictions.txt")
 vanilla_predictions = np.loadtxt(vanilla_prediction_path)
 
-# Plot age results
+# Make dataframe to plot from
 data = pd.DataFrame(
         {'gpu': gpu_predictions,
         'vanilla': vanilla_predictions,
@@ -156,6 +156,7 @@ data = pd.DataFrame(
         'tissue': pheno_data['paper_tissue']})
 data['in_source'] = np.where(data['tissue'] == "Brain Cerebellum", "2", "1")
 
+# Make Figure 1C
 gC = ggplot(data, aes('true', 'gpu', color='tissue'))
 gC += geom_abline(color='gray', linetype='dashed')
 gC += geom_point(size=2)
@@ -164,21 +165,21 @@ gC += scale_color_manual(["#377EB8", "#E41A1C", "#A65628",
                           "#F781BF", "#4DAF4A", "#984EA3"])
 gC += theme_bw()
 gC += ggtitle("Methylation Age Prediction with wenda_gpu")
-gC.save("figures/wenda_true_comparison.%s" % ext, dpi=300, width=6, height=4.8)
+gC.save("figures/wenda_true_comparison.%s" % ext, dpi=300)
 
-
-gCC = ggplot(data, aes('true', 'vanilla', color='tissue')) 
-gCC += geom_abline(color='gray', linetype='dashed')
-gCC += geom_point(size=2)
-gCC += labs(color='Tissue', x='Actual age', y='Predicted age')
-gCC += scale_color_manual(["#377EB8", "#E41A1C", "#A65628",
+# Make Figure 1D
+gD = ggplot(data, aes('true', 'vanilla', color='tissue')) 
+gD += geom_abline(color='gray', linetype='dashed')
+gD += geom_point(size=2)
+gD += labs(color='Tissue', x='Actual age', y='Predicted age')
+gD += scale_color_manual(["#377EB8", "#E41A1C", "#A65628",
                            "#F781BF", "#4DAF4A", "#984EA3"])
-gCC += theme_bw()
-gCC += ggtitle("Methylation Age Prediction with Elastic Net")
-gCC.save("figures/vanilla_true_comparison.%s" % ext, dpi=300, width=6, height=4.8)
+gD += theme_bw()
+gD += ggtitle("Methylation Age Prediction with Elastic Net")
+gD.save("figures/vanilla_true_comparison.%s" % ext, dpi=300)
 
 
-# Figure 1D
+# Figure 1E-F
 # Results of pairwise experiment
 
 pairwise_data_path = "output/pairwise/pairwise_accuracy.tsv"
@@ -193,22 +194,24 @@ pairwise = pd.merge(signal, shuffled, on=['Source', 'Target'])
 pairwise['Wenda_diff'] = pairwise['Signal_Wenda'] - pairwise['Shuffled_Wenda']
 pairwise['Vanilla_diff'] = pairwise['Signal_Elastic'] - pairwise['Shuffled_Elastic']
 
-gD = ggplot(pairwise, aes(x='Source', y='Target', fill='Wenda_diff')) + geom_tile()
-gD += theme_classic() + theme(axis_text_x=element_text(angle=90))
-gD += scale_fill_gradient2(low="#377EB8", high="#E41A1C", limits=[-0.8, 0.8])
-gD += labs(fill='Accuracy (Signal - Shuffled)', x='Source Data', y='Target Data')
-gD += ggtitle("TP53 Mutation Prediction with wenda_gpu")
-gD.save("figures/pairwise_wenda.%s" % ext, dpi=300)
+# Make Figure 1E
+gE = ggplot(pairwise, aes(x='Source', y='Target', fill='Vanilla_diff')) + geom_tile()
+gE += scale_fill_gradient2(low="#377EB8", high="#E41A1C", limits=[-0.8, 0.8])
+gE += theme_classic() + theme(axis_text_x=element_text(angle=90))
+gE += labs(fill='Accuracy\n(Signal - Shuffled)\n', x='Source Data', y='Target Data')
+gE += ggtitle("TP53 Mutation Prediction with Elastic Net")
+gE.save("figures/pairwise_vanilla.%s" % ext, dpi=300)
 
-gDD = ggplot(pairwise, aes(x='Source', y='Target', fill='Vanilla_diff')) + geom_tile()
-gDD += scale_fill_gradient2(low="#377EB8", high="#E41A1C", limits=[-0.8, 0.8])
-gDD += theme_classic() + theme(axis_text_x=element_text(angle=90))
-gDD += labs(fill='Accuracy (Signal - Shuffled)', x='Source Data', y='Target Data')
-gDD += ggtitle("TP53 Mutation Prediction with Elastic Net")
-gDD.save("figures/pairwise_vanilla.%s" % ext, dpi=300)
+# Make Figure 1F
+gF = ggplot(pairwise, aes(x='Source', y='Target', fill='Wenda_diff')) + geom_tile()
+gF += theme_classic() + theme(axis_text_x=element_text(angle=90))
+gF += scale_fill_gradient2(low="#377EB8", high="#E41A1C", limits=[-0.8, 0.8])
+gF += labs(fill='Accuracy\n(Signal - Shuffled)\n', x='Source Data', y='Target Data')
+gF += ggtitle("TP53 Mutation Prediction with wenda_gpu")
+gF.save("figures/pairwise_wenda.%s" % ext, dpi=300)
 
 
-# Figure 1E
+# Figure 1G
 # Directly comparing accuracy for wenda and elastic net.
 # This is just for the AACR poster
 
@@ -216,32 +219,28 @@ pairwise['Wenda_over_vanilla'] = pairwise['Signal_Wenda'] - pairwise['Signal_Ela
 bettersame = pairwise.loc[pairwise['Wenda_over_vanilla'] >= 0, ]
 print(bettersame.shape)
 
-gE = ggplot(pairwise, aes(x='Signal_Elastic', y='Signal_Wenda'))
-gE += geom_point(size=2)
-gE += theme_bw()
-gE += geom_abline()
-gE += xlab("Elastic net accuracy") + ylab("wenda_gpu accuracy")
-gE += ggtitle("TP53 Mutation Prediction Accuracy")
-gE.save("figures/pairwise_scatterplot.%s" % ext, dpi=300)
+gG = ggplot(pairwise, aes(x='Signal_Elastic', y='Signal_Wenda'))
+gG += geom_point(size=2)
+gG += theme_bw()
+gG += geom_abline()
+gG += xlab("Elastic net accuracy") + ylab("wenda_gpu accuracy")
+gG += ggtitle("TP53 Mutation Prediction Accuracy")
+gG.save("figures/pairwise_scatterplot.%s" % ext, dpi=300)
 
 
 # Combine all paper figures into one
-def make_figure_panel(filename, scale_x_input, scale_y_input, x_loc, y_loc):
+def make_figure_panel(filename, scale, x_loc, y_loc):
     panel = sg.fromfile(filename)
     panel_size = (
             np.round(float(panel.root.attrib["width"][:-2]) * 1.33, 0),
             np.round(float(panel.root.attrib["height"][:-2]) * 1.33, 0)
             )
 
-    scale_x = scale_x_input
-    scale_y = scale_y_input
-
     print(f"original: {panel_size}")
-    print(f"scaled:{(panel_size[0]*scale_x,panel_size[1]*scale_y)}")
+    print(f"scaled:{(panel_size[0]*scale,panel_size[1]*scale)}")
 
     panel = panel.getroot()
-    panel.scale_xy(x=scale_x, y=scale_y) #TODO: this is throwing an AttributeError so I just left it out
-    panel.moveto(x_loc, y_loc)
+    panel.moveto(x_loc, y_loc, scale)
 
     return panel
 
@@ -249,65 +248,63 @@ def make_figure_panel(filename, scale_x_input, scale_y_input, x_loc, y_loc):
 if ext == "svg":
     panel_1a = make_figure_panel(
             "figures/runtimes.svg",
-            scale_x_input=0.85,
-            scale_y_input=0.85,
+            scale=0.85,
             x_loc=20,
             y_loc=20)
 
     panel_1b = make_figure_panel(
             "figures/software_correlation.svg",
-            scale_x_input=0.85,
-            scale_y_input=0.85,
-            x_loc=650,
+            scale=0.85,
+            x_loc=500,
             y_loc=20)
 
     panel_1c = make_figure_panel(
             "figures/vanilla_true_comparison.svg",
-            scale_x_input=0.85,
-            scale_y_input=0.85,
-            x_loc=20,
-            y_loc=400)
-
-    panel_1cc = make_figure_panel(
-            "figures/wenda_true_comparison.svg",
-            scale_x_input=0.85,
-            scale_y_input=0.85,
-            x_loc=650,
-            y_loc=400)
+            scale=0.85,
+            x_loc=30,
+            y_loc=333)
 
     panel_1d = make_figure_panel(
-            "figures/pairwise_vanilla.svg",
-            scale_x_input=0.85,
-            scale_y_input=0.85,
-            x_loc=20,
-            y_loc=800)
+            "figures/wenda_true_comparison.svg",
+            scale=0.85,
+            x_loc=500,
+            y_loc=333)
 
-    panel_1dd = make_figure_panel(
+    panel_1e = make_figure_panel(
+            "figures/pairwise_vanilla.svg",
+            scale=0.85,
+            x_loc=20,
+            y_loc=667)
+
+    panel_1f = make_figure_panel(
             "figures/pairwise_wenda.svg",
-            scale_x_input=0.85,
-            scale_y_input=0.85,
-            x_loc=650,
-            y_loc=800)
+            scale=0.85,
+            x_loc=500,
+            y_loc=667)
 
     panel_1a_label = sg.TextElement(20, 20, "A", size=16, weight="bold")
-    panel_1b_label = sg.TextElement(650, 20, "B", size=16, weight="bold")
-    panel_1c_label = sg.TextElement(20, 400, "C", size=16, weight="bold")
-    panel_1d_label = sg.TextElement(20, 800, "D", size=16, weight="bold")
+    panel_1b_label = sg.TextElement(500, 20, "B", size=16, weight="bold")
+    panel_1c_label = sg.TextElement(20, 333, "C", size=16, weight="bold")
+    panel_1d_label = sg.TextElement(500, 333, "D", size=16, weight="bold")
+    panel_1e_label = sg.TextElement(20, 667, "E", size=16, weight="bold")
+    panel_1f_label = sg.TextElement(500, 667, "F", size=16, weight="bold")
 
-    figure_1 = sg.SVGFigure("1300", "1400")
+    figure_1 = sg.SVGFigure("1300", "1333")
     figure_1.append(
             [
                 etree.Element("rect", {"width": "100%", "height": "100%", "fill": "white"}),
                 panel_1a,
                 panel_1b,
                 panel_1c,
-                panel_1cc,
                 panel_1d,
-                panel_1dd,
+                panel_1e,
+                panel_1f,
                 panel_1a_label,
                 panel_1b_label,
                 panel_1c_label,
-                panel_1d_label
+                panel_1d_label,
+                panel_1e_label,
+                panel_1f_label
             ]
         )
     figure_1.save("figures/final.svg")
