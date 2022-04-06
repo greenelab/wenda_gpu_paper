@@ -30,6 +30,8 @@ if args.png:
 else:
     ext = "svg"
 
+# Make folder for figures
+os.makedirs("figures", exist_ok=True)
 
 # Figure 0
 # Basic barplot of methylation runtimes, only for the AACR poster
