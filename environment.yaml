@@ -11,9 +11,12 @@ dependencies:
 - conda-forge::pandas=1.2.5
 - conda-forge::gpytorch=1.5.1
 - conda-forge::gpy=1.10.0
+- conda-forge::ipython=7.28.0
+- conda-forge::tqdm=4.62.3
 - conda-forge::glmnet=2.2.1
 - conda-forge::scipy=1.7.1
 - conda-forge::matplotlib=3.3.4
 - conda-forge::scikit-learn=0.24.2
 - conda-forge::statsmodels=0.13.2
 - conda-forge::plotnine=0.8.0
+- conda-forge::svgutils=0.3.0
