@@ -105,7 +105,7 @@ def main(prefix):
 
     model = models.Wenda(data.training.meth_matrix, data.training.age, data.test.meth_matrix, 
                                  normalizer_x, normalizer_y, feature_model_path, feature_model_type, feature_model_params, conf_path, 
-                                 n_jobs=n_jobs)
+                                 n_jobs=n_jobs, accept_partial_fit=True)
     print(model)
     print(flush=True)
    

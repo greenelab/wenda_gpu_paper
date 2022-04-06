@@ -5,5 +5,5 @@
 # cpu, we obtained the compiled confidence scores from the original authors
 # of the Handl et al paper to input into their code.
 
-python3 train_elastic_net.py handl --horvath 
+python3 train_elastic_net.py -p handl --horvath 
 python3 wenda_orig/elastic_net.py handl
