@@ -1,6 +1,6 @@
 # wenda_gpu_paper
 
-This repository has all the scripts run to perform the analysis in the wenda_gpu paper (preprint forthcoming). 
+This repository has all the scripts run to perform the analysis in the wenda_gpu paper (see citation section). 
 For the software package that this repo analyzes, go here: https://github.com/greenelab/wenda_gpu.
 
 The goal of the paper is to demonstrate that our new implementation of weighted elastic net domain adaptation, called wenda_gpu, is significantly faster than the original CPU method while returning comparable results.
