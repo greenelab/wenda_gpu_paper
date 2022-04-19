@@ -20,7 +20,7 @@ conda activate wenda_gpu_paper
 ## Data
 
 This repository contains the data for the predicting age via tissue methylation analysis, first used in the original wenda paper (Handl et al. 2019, DOI 10.1093/bioinformatics/btz338).
-All other data can be generated or downloaded using scripts. 
+All other data can be generated or downloaded using the numbered scripts. 
 The simulated datasets for runtime comparison are generated using 01_make_simulated_data.py.
 The TCGA data for pairwise mutation prediction is downloaded using 05_download_tcga_data.py.
 
@@ -32,3 +32,11 @@ Some of these are performing analyses in their own right (end in .py), and some 
 Some of these master scripts call a large number of scripts and can take up to several days to run, which will be indicated in the master script's header.
 These scripts can be safely broken into chunks at user discretion.
 For instance, users with access to large cluster resources may want to break them into chunks and run them in parallel.
+
+
+## Citation
+If you use this method, please cite the following:
+
+```wenda_gpu: fast domain adaptation for genomic data
+Ariel A. Hippen, Jake Crawford, Jacob R. Gardner, Casey S. Greene
+bioRxiv 2022.04.09.487671; doi: https://doi.org/10.1101/2022.04.09.487671```
