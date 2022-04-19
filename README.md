@@ -5,8 +5,7 @@ For the software package that this repo analyzes, go here: https://github.com/gr
 
 The goal of the paper is to demonstrate that our new implementation of weighted elastic net domain adaptation, called wenda_gpu, is significantly faster than the original CPU method while returning comparable results.
 
-![Age prediction with elastic net](https://github.com/greenelab/wenda_gpu_paper/blob/main/figures/vanilla_true_comparison.png)
-![Age prediction with wenda](https://github.com/greenelab/wenda_gpu_paper/blob/main/figures/wenda_true_comparison.png)
+<img src="https://github.com/greenelab/wenda_gpu_paper/blob/main/figures/vanilla_true_comparison.png" width=50% height=50%><img src="https://github.com/greenelab/wenda_gpu_paper/blob/main/figures/wenda_true_comparison.png" width=50% height=50%>
 
 
 ## Setup
