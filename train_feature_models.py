@@ -10,12 +10,16 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-p', '--prefix', default="handl", help="Dataset identifier, will be used to name folders for intermediate and output data.")
 parser.add_argument('-s', '--start', type=int, default=0, help="What feature number to start training on. This is needed for batch training.")
 parser.add_argument('-r', '--range', type=int, default=100, help="How many feature models to train. This is needed for batch training.")
+parser.add_argument('--cpu', action="store_true", help="Run wenda_gpu code on CPU for benchmarking purposes.")
 args = parser.parse_args()
 
 # Set torch to run with float32 instead of float64, which exponentially
 # increases speed with neglibile decrease in precision.
 dtype = torch.float32
-device = 'cuda'
+if args.cpu:
+    device = 'cpu'
+else:
+    device = 'cuda'
 
 # Load data
 source_file = os.path.join("data", args.prefix, "source_data.tsv")
@@ -40,7 +44,10 @@ normed_target_matrix = normed
 # Since we're doing side-by-side runs of wenda_gpu and wenda_orig,
 # we can pull from the same data directory but need to store output
 # (feature models and confidence scores) in separate folders.
-output_prefix = args.prefix + "_wenda_gpu"
+if args.cpu:
+    output_prefix = args.prefix + "_wenda_cputest"
+else:
+    output_prefix = args.prefix + "_wenda_gpu"
 
 # Make directory to store feature models
 output_dir = os.path.join("feature_models", output_prefix)
@@ -54,7 +61,7 @@ first_model = args.start
 total_features = source_matrix.shape[1]
 
 for i in range(args.range):
-    #Prevent out of range error if start + range > total number of features
+    # Prevent out of range error if start + range > total number of features
     feature_number = first_model + i
     if feature_number >= total_features:
         break
@@ -78,7 +85,7 @@ for i in range(args.range):
         # Train model if it has not been previously generated
         modelfile = os.path.join(output_dir, "model_%s.pth" % feature_number)
         if os.path.isfile(modelfile) is False:
-        
+
             # Initialize model and likelihood
             likelihood = gpytorch.likelihoods.GaussianLikelihood().to(device=device, dtype=dtype)
             model = model_train_helper.ExactGPModel(train_x, train_y, likelihood).to(device=device, dtype=dtype)
@@ -96,7 +103,7 @@ for i in range(args.range):
 
             # Save feature model
             torch.save(model.state_dict(),os.path.join(output_dir, "model_%s.pth" % feature_number))
-    
+
         # If model was previously generated, load for confidence score calculation
         else:
             likelihood = gpytorch.likelihoods.GaussianLikelihood().to(device=device, dtype=dtype)
